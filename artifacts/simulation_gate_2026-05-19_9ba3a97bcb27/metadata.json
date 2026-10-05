@@ -1,0 +1,87 @@
+{
+  "artifact_scope": "offline_gate_simulation",
+  "protocol": "70/10/5/5/10_chronological",
+  "source": "Yahoo Finance BRL=X, data/raw/usd_brl_daily.csv",
+  "split": {
+    "train": {
+      "start_index": 0,
+      "end_index_exclusive": 682,
+      "rows": 682,
+      "start": "2023-01-02",
+      "end": "2025-08-15"
+    },
+    "validation": {
+      "start_index": 682,
+      "end_index_exclusive": 780,
+      "rows": 98,
+      "start": "2025-08-18",
+      "end": "2026-01-02"
+    },
+    "new_batch": {
+      "start_index": 780,
+      "end_index_exclusive": 828,
+      "rows": 48,
+      "start": "2026-01-05",
+      "end": "2026-03-11"
+    },
+    "promotion": {
+      "start_index": 828,
+      "end_index_exclusive": 877,
+      "rows": 49,
+      "start": "2026-03-12",
+      "end": "2026-05-19"
+    },
+    "final_test": {
+      "start_index": 877,
+      "end_index_exclusive": 975,
+      "rows": 98,
+      "start": "2026-05-20",
+      "end": "2026-10-02"
+    }
+  },
+  "validation_metrics": {
+    "n_observations": 98,
+    "n_directional": 98,
+    "n_stable_actual": 0,
+    "mae_prophet": 0.03673542469050111,
+    "mae_naive_last_close": 0.02593776644492636,
+    "direction_accuracy_prophet": 0.6122448979591837,
+    "direction_accuracy_majority_history": 0.5204081632653061,
+    "walk_forward_seconds": 29.52
+  },
+  "gate_metrics": {
+    "n_promotion_dates": 49,
+    "mae_champion": 0.08230786858113966,
+    "mae_candidate": 0.07627985125967254,
+    "mae_static_persistence": 0.12773428157884245,
+    "promoted": true,
+    "active_model": "candidate_85_percent"
+  },
+  "test_metrics": null,
+  "champion": {
+    "cutoff": "2026-01-02",
+    "rows": 780,
+    "last_close": 5.517000198364258,
+    "sha256": "2b4d2c4dfeb9d2f00ffb3f5c2701776fee98798e506748b0f20eb48d026030b7"
+  },
+  "candidate": {
+    "cutoff": "2026-03-11",
+    "rows": 828,
+    "last_close": 5.162399768829346,
+    "sha256": "9ba3a97bcb27e736256fdcd496660fab88853f7e181a9573be5041a6914071e3"
+  },
+  "active_model": "candidate_85_percent",
+  "active_cutoff": "2026-03-11",
+  "active_rows": 828,
+  "active_sha256": "9ba3a97bcb27e736256fdcd496660fab88853f7e181a9573be5041a6914071e3",
+  "frozen_config": {
+    "daily_seasonality": false,
+    "weekly_seasonality": false,
+    "yearly_seasonality": true,
+    "uncertainty_samples": 0
+  },
+  "prophet_version": "1.5.0",
+  "evaluation_note": "modelos congelados, mesmas 49 datas, horizonte crescente; atualização de dados e idade do modelo diferem",
+  "generated_at_utc": "2026-10-05T18:57:24.727551+00:00",
+  "legacy_artifacts": "não alterados; integração do outro checkout pendente"
+}

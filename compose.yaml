@@ -1,0 +1,51 @@
+name: usdbrl-platform
+services:
+  postgres:
+    build: ./src/postgres
+    environment: {POSTGRES_DB: usdbrl, POSTGRES_USER: usdbrl, POSTGRES_PASSWORD: usdbrl_local_only}
+    volumes: [postgres_data:/var/lib/postgresql/data]
+    networks: [internal]
+    healthcheck: {test: [CMD-SHELL, "pg_isready -U usdbrl -d usdbrl"], interval: 5s, timeout: 3s, retries: 20}
+  minio-bronze:
+    build: ./src/bronze
+    user: "0:0"
+    command: server /data
+    environment: {MINIO_ROOT_USER: local_minio, MINIO_ROOT_PASSWORD: local_minio_change_me}
+    volumes: [bronze_data:/data]
+    networks: [internal]
+  mlops-worker:
+    build: ./src/mlops
+    volumes: [./data:/data:ro]
+    networks: [internal]
+  prophet-service:
+    build: ./src/models/prophet
+    volumes: [./artifacts:/artifacts:ro, ./data:/data:ro]
+    networks: [internal]
+    healthcheck: {test: [CMD, python, -c, "import urllib.request; urllib.request.urlopen('http://localhost:8081/health')"], interval: 10s, timeout: 5s, retries: 12}
+  sarima-service:
+    build: ./src/models/sarima
+    volumes: [./data:/data:ro]
+    networks: [internal]
+    healthcheck: {test: [CMD, python, -c, "import urllib.request; urllib.request.urlopen('http://localhost:8082/health')"], interval: 10s, timeout: 5s, retries: 18}
+  training-worker:
+    build: ./src/training
+    environment: {DATABASE_URL: postgresql://usdbrl:usdbrl_local_only@postgres:5432/usdbrl}
+    volumes: [./data:/data:ro, ./artifacts:/artifacts:ro]
+    depends_on: {postgres: {condition: service_healthy}}
+    networks: [internal]
+  backend-api:
+    build: ./src/backend
+    environment: {DATABASE_URL: postgresql://usdbrl:usdbrl_local_only@postgres:5432/usdbrl, PROPHET_URL: http://prophet-service:8081, SARIMA_URL: http://sarima-service:8082}
+    depends_on:
+      postgres: {condition: service_healthy}
+      prophet-service: {condition: service_healthy}
+      sarima-service: {condition: service_healthy}
+    ports: ["8080:8080"]
+    volumes: [./data:/data:ro]
+    networks: [internal, edge]
+networks:
+  internal: {name: usdbrl_internal, internal: true}
+  edge: {name: usdbrl_edge}
+volumes:
+  postgres_data: {}
+  bronze_data: {}

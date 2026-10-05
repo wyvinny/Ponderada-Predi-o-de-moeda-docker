@@ -1,0 +1,64 @@
+{
+  "artifact_scope": "development_90_percent",
+  "source": "Yahoo Finance BRL=X, data/raw/usd_brl_daily.csv",
+  "source_rows": 980,
+  "rows_used": 877,
+  "missing_close_removed_from_copy": 5,
+  "input_schema": {
+    "ds": "datetime64[ns]",
+    "y": "float, BRL por USD"
+  },
+  "target": "Close do próximo dia útil estimado; direção comparada ao último Close",
+  "split": {
+    "train": {
+      "start_index": 0,
+      "end_index_exclusive": 682,
+      "rows": 682,
+      "start": "2023-01-02",
+      "end": "2025-08-15"
+    },
+    "validation": {
+      "start_index": 682,
+      "end_index_exclusive": 877,
+      "rows": 195,
+      "start": "2025-08-18",
+      "end": "2026-05-19"
+    },
+    "test": {
+      "start_index": 877,
+      "end_index_exclusive": 975,
+      "rows": 98,
+      "start": "2026-05-20",
+      "end": "2026-10-02"
+    }
+  },
+  "validation_metrics": {
+    "n_observations": 195,
+    "n_directional": 195,
+    "n_stable_actual": 0,
+    "mae_prophet": 0.04475779716494533,
+    "mae_naive_last_close": 0.02812839165712013,
+    "direction_accuracy_prophet": 0.5897435897435898,
+    "direction_accuracy_majority_history": 0.5333333333333333,
+    "walk_forward_seconds": 64.88
+  },
+  "test_metrics": null,
+  "evaluation_protocol": "walk-forward expansivo de um passo; teste 10% reservado para apresentação, sem execução nesta etapa",
+  "frozen_config": {
+    "daily_seasonality": false,
+    "weekly_seasonality": false,
+    "yearly_seasonality": true,
+    "uncertainty_samples": 0
+  },
+  "prophet_version": "1.5.0",
+  "model_cutoff": "2026-05-19",
+  "test_reservation_start": "2026-05-20",
+  "historical_holdout_start_date": "2026-05-20",
+  "historical_holdout_start_forecast": 4.961569983911682,
+  "generated_at_utc": "2026-10-05T18:22:35.568966+00:00",
+  "limitations": [
+    "BDay não exclui feriados",
+    "teste final reservado",
+    "artefato demonstração treinado em 90%, não em 100%"
+  ]
+}

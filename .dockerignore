@@ -1,0 +1,9 @@
+.venv
+.git
+artifacts
+data
+notebooks
+docs
+src
+client
+__pycache__
